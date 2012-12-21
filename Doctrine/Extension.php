@@ -69,7 +69,7 @@ class Extension extends \Nette\Config\CompilerExtension
 			->setClass('Doctrine\DBAL\Connection')
 			->setFactory(get_called_class() . '::createConnection', array($config['connection']));
 
-		$container->addDefinition($this->prefix('manager'))
+		$container->addDefinition($this->prefix('entityManager'))
 			->setClass('Doctrine\ORM\EntityManager')
 			->setFactory('Doctrine\ORM\EntityManager::create', array($this->prefix('@connection')));
 
