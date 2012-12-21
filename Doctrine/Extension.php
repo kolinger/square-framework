@@ -1,13 +1,26 @@
 <?php
 
+/**
+ * This file is part of the Square CMS
+ *
+ * Copyright (c) 2011, 2012 Tomáš Kolinger <tomas@kolinger.name>
+ *
+ * For the full copyright and license information, please view the file license.txt that was distributed with this source code.
+ */
+
 namespace Square\Doctrine;
 
+
+
 /**
- * @author Tomáš Kolinger
+ * @author Tomáš Kolinger <tomas@kolinger.name>
  */
 class Extension extends \Nette\Config\CompilerExtension
 {
-	/** @var array */
+
+	/**
+	 * @var array
+	 */
 	private $defaults = array(
 		'entitiesDirs' => array('%appDir%'),
 		'proxyDir' => '%appDir%/proxies',
@@ -23,6 +36,8 @@ class Extension extends \Nette\Config\CompilerExtension
 			'dbname' => '',
 		),
 	);
+
+
 
 	public function loadConfiguration()
 	{
@@ -79,10 +94,12 @@ class Extension extends \Nette\Config\CompilerExtension
 			->addTag('consoleCommand');
 	}
 
+
+
 	/**
-	 * @param array
-	 * @param Logger
-	 * @param \Doctrine\ORM\Configuration
+	 * @param array $config
+	 * @param Logger $logger
+	 * @param \Doctrine\ORM\Configuration $configuration
 	 * @return \Doctrine\DBAL\Connection
 	 */
 	public static function createConnection(array $config, Logger $logger, \Doctrine\ORM\Configuration $configuration)
@@ -107,9 +124,11 @@ class Extension extends \Nette\Config\CompilerExtension
 		return $connection;
 	}
 
+
+
 	/**
-	 * @param array
-	 * @param \Nette\Caching\Cache
+	 * @param array $entitiesDirs
+	 * @param Cache $cache
 	 * @return \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 	 */
 	public static function createAnnotationDriver(array $entitiesDirs, Cache $cache)
@@ -122,4 +141,5 @@ class Extension extends \Nette\Config\CompilerExtension
 
 		return new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedReader, $entitiesDirs);
 	}
+
 }

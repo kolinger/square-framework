@@ -1,18 +1,33 @@
 <?php
 
+/**
+ * This file is part of the Square CMS
+ *
+ * Copyright (c) 2011, 2012 Tomáš Kolinger <tomas@kolinger.name>
+ *
+ * For the full copyright and license information, please view the file license.txt that was distributed with this source code.
+ */
+
 namespace Square\Console;
 
+
+
 /**
- * @author Tomáš Kolinger
+ * @author Tomáš Kolinger <tomas@kolinger.name>
  */
 class Extension extends \Nette\Config\CompilerExtension
 {
-	/** @var array */
+
+	/**
+	 * @var array
+	 */
 	private $defaults = array(
 		'name' => 'Square Command Line Interface',
 		'version' => '1.0',
 		'catchExceptions' => TRUE,
 	);
+
+
 
 	public function loadConfiguration()
 	{
@@ -35,8 +50,10 @@ class Extension extends \Nette\Config\CompilerExtension
 			->addSetup('offsetSet', array(NULL, $this->prefix('@router')));
 	}
 
+
+
 	/**
-	 * @param \Nette\DI\Container
+	 * @param \Nette\DI\Container $container
 	 * @return \Symfony\Component\Console\Helper\HelperSet
 	 */
 	public static function createHelperSet(\Nette\DI\Container $container)
@@ -51,10 +68,12 @@ class Extension extends \Nette\Config\CompilerExtension
 		return $helperSet;
 	}
 
+
+
 	/**
-	 * @param array
-	 * @param \Nette\DI\Container
-	 * @param \Symfony\Component\Console\Helper\HelperSet
+	 * @param array $config
+	 * @param \Nette\DI\Container $container
+	 * @param \Symfony\Component\Console\Helper\HelperSet $helperSet
 	 * @return \Symfony\Component\Console\Application
 	 */
 	public static function createApplication(array $config, \Nette\DI\Container $container, \Symfony\Component\Console\Helper\HelperSet $helperSet)
@@ -70,4 +89,5 @@ class Extension extends \Nette\Config\CompilerExtension
 
 		return $application;
 	}
+
 }

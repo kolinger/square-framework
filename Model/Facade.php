@@ -1,23 +1,40 @@
 <?php
 
+/**
+ * This file is part of the Square CMS
+ *
+ * Copyright (c) 2011, 2012 Tomáš Kolinger <tomas@kolinger.name>
+ *
+ * For the full copyright and license information, please view the file license.txt that was distributed with this source code.
+ */
+
 namespace Square\Model;
 
+
+
 /**
- * @author Tomáš Kolinger
+ * @author Tomáš Kolinger <tomas@kolinger.name>
  *
  * @property-read \Doctrine\ORM\EntityManager $entityManager
  * @property-read \Doctrine\ORM\EntityRepository $repository
  */
 abstract class Facade extends \Nette\Object
 {
+
 	const FLUSH = true;
 	const WITHOUT_FLUSH = false;
 
-	/** @var \Doctrine\ORM\EntityManager */
+	/**
+	 * @var \Doctrine\ORM\EntityManager
+	 */
 	private $entityManager;
 
-	/** @var \Doctrine\ORM\EntityRepository */
+	/**
+	 * @var \Doctrine\ORM\EntityRepository
+	 */
 	private $repository;
+
+
 
 	/**
 	 * @param \Doctrine\ORM\EntityRepository
@@ -29,6 +46,8 @@ abstract class Facade extends \Nette\Object
 		$this->repository = $repository;
 	}
 
+
+
 	/**
 	 * @return \Doctrine\ORM\EntityManager
 	 */
@@ -37,6 +56,8 @@ abstract class Facade extends \Nette\Object
 		return $this->entityManager;
 	}
 
+
+
 	/**
 	 * @return \Doctrine\ORM\EntityRepository
 	 */
@@ -44,6 +65,8 @@ abstract class Facade extends \Nette\Object
 	{
 		return $this->repository;
 	}
+
+
 
 	/**
 	 * @return object
@@ -55,9 +78,11 @@ abstract class Facade extends \Nette\Object
 		return $entity;
 	}
 
+
+
 	/**
-	 * @param object
-	 * @param boolean
+	 * @param object $entity
+	 * @param boolean $flush
 	 */
 	public function save($entity, $flush = self::FLUSH)
 	{
@@ -71,9 +96,11 @@ abstract class Facade extends \Nette\Object
 //		}
 	}
 
+
+
 	/**
-	 * @param object
-	 * @param boolean
+	 * @param object $entity
+	 * @param boolean $flush
 	 */
 	public function remove($entity, $flush = self::FLUSH)
 	{
@@ -87,6 +114,8 @@ abstract class Facade extends \Nette\Object
 //		}
 	}
 
+
+
 	/**
 	 * @return array
 	 */
@@ -95,12 +124,15 @@ abstract class Facade extends \Nette\Object
 		return $this->repository->findAll();
 	}
 
+
+
 	/**
-	 * @param string
+	 * @param string $alias
 	 * @return \Doctrine\ORM\QueryBuilder
 	 */
 	protected function createQueryBuilder($alias)
 	{
 		return $this->repository->createQueryBuilder($alias);
 	}
+
 }

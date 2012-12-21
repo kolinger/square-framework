@@ -1,26 +1,43 @@
 <?php
 
+/**
+ * This file is part of the Square CMS
+ *
+ * Copyright (c) 2011, 2012 Tomáš Kolinger <tomas@kolinger.name>
+ *
+ * For the full copyright and license information, please view the file license.txt that was distributed with this source code.
+ */
+
 namespace Square\Doctrine;
 
+
+
 /**
- * @author Tomáš Kolinger
+ * @author Tomáš Kolinger <tomas@kolinger.name>
  */
 class Cache extends \Doctrine\Common\Cache\CacheProvider
 {
-	/** @var \Nette\Caching\IStorage */
-	private $storage;
 
 	/**
-	 * @param \Nette\Caching\IStorage
+	 * @var \Nette\Caching\IStorage
+	 */
+	private $storage;
+
+
+
+	/**
+	 * @param \Nette\Caching\IStorage $storage
 	 */
 	public function __construct(\Nette\Caching\IStorage $storage)
 	{
 		$this->storage = new \Nette\Caching\Cache($storage, 'Square.Doctrine');
 	}
 
+
+
 	/**
-	 * @param string
-	 * @return FALSE|string
+	 * @param string $id
+	 * @return string|FALSE
 	 */
 	protected function doFetch($id)
 	{
@@ -31,9 +48,11 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 		return FALSE;
 	}
 
+
+
 	/**
-	 * @param string
-	 * @return boolean
+	 * @param string $id
+	 * @return bool
 	 */
 	protected function doContains($id)
 	{
@@ -43,11 +62,13 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 		return FALSE;
 	}
 
+
+
 	/**
-	 * @param string
-	 * @param string
-	 * @param boolean
-	 * @return boolean
+	 * @param string $id
+	 * @param string $data
+	 * @param bool $lifeTime
+	 * @return bool
 	 */
 	protected function doSave($id, $data, $lifeTime = FALSE)
 	{
@@ -63,9 +84,11 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 		return TRUE;
 	}
 
+
+
 	/**
-	 * @param string
-	 * @return boolean
+	 * @param string $id
+	 * @return bool
 	 */
 	protected function doDelete($id)
 	{
@@ -73,8 +96,10 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 		return TRUE;
 	}
 
+
+
 	/**
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function doFlush()
 	{
@@ -84,11 +109,14 @@ class Cache extends \Doctrine\Common\Cache\CacheProvider
 		return TRUE;
 	}
 
+
+
 	/**
-	 * @return NULL|array
+	 * @return array|null
 	 */
 	protected function doGetStats()
 	{
 		return NULL;
 	}
+
 }
