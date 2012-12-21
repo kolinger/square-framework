@@ -86,14 +86,16 @@ abstract class Facade extends \Nette\Object
 	 */
 	public function save($entity, $flush = self::FLUSH)
 	{
-//		try {
+		try {
 			$this->entityManager->persist($entity);
 			if ($flush == self::FLUSH) {
 				$this->entityManager->flush();
 			}
-//		} catch () {
-//
-//		}
+		} catch(\Doctrine\DBAL\DBALException $exception) {
+			Helper::convertException($exception);
+		} catch (\PDOException $exception) {
+			Helper::convertException($exception);
+		}
 	}
 
 
@@ -104,14 +106,16 @@ abstract class Facade extends \Nette\Object
 	 */
 	public function remove($entity, $flush = self::FLUSH)
 	{
-//		try {
+		try {
 			$this->entityManager->remove($entity);
 			if ($flush == self::FLUSH) {
 				$this->entityManager->flush();
 			}
-//		} catch () {
-//
-//		}
+		} catch(\Doctrine\DBAL\DBALException $exception) {
+			Helper::convertException($exception);
+		} catch (\PDOException $exception) {
+			Helper::convertException($exception);
+		}
 	}
 
 
