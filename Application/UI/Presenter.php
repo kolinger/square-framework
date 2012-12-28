@@ -21,6 +21,8 @@ use Nette\Reflection\ClassType;
 class Presenter extends \Nette\Application\UI\Presenter
 {
 
+	const CACHE_NAMESPACE = 'Square.Presenter.Autowire';
+
 	/**
 	 * @var array
 	 */
@@ -46,7 +48,7 @@ class Presenter extends \Nette\Application\UI\Presenter
 		}
 
 		$this->serviceLocator = $dic;
-		$cache = new \Nette\Caching\Cache($this->serviceLocator->getByType('Nette\Caching\IStorage'), 'Presenter.Autowire');
+		$cache = new \Nette\Caching\Cache($this->serviceLocator->getByType('Nette\Caching\IStorage'), self::CACHE_NAMESPACE);
 		if (($this->autowire = $cache->load($presenterClass = get_class($this))) === NULL) {
 			$this->autowire = array();
 
