@@ -21,8 +21,9 @@ namespace Square\Model;
 abstract class Facade extends \Nette\Object
 {
 
-	const FLUSH = true;
-	const WITHOUT_FLUSH = false;
+	const CACHE_NAMESPACE = 'Square.Model';
+	const FLUSH = true,
+		WITHOUT_FLUSH = false;
 
 	/**
 	 * @var \Doctrine\ORM\EntityManager
@@ -34,16 +35,23 @@ abstract class Facade extends \Nette\Object
 	 */
 	private $repository;
 
+	/**
+	 * @var \Nette\Caching\Cache
+	 */
+	private $cache;
+
 
 
 	/**
-	 * @param \Doctrine\ORM\EntityRepository
-	 * @param \Doctrine\ORM\EntityManager
+	 * @param \Doctrine\ORM\EntityRepository $repository
+	 * @param \Doctrine\ORM\EntityManager $entityManager
+	 * @param \Nette\Caching\IStorage $storage
 	 */
-	public function __construct(\Doctrine\ORM\EntityRepository $repository, \Doctrine\ORM\EntityManager $entityManager)
+	public function __construct(\Doctrine\ORM\EntityRepository $repository, \Doctrine\ORM\EntityManager $entityManager, \Nette\Caching\IStorage $storage)
 	{
 		$this->entityManager = $entityManager;
 		$this->repository = $repository;
+		$this->cache = new \Nette\Caching\Cache($storage, self::CACHE_NAMESPACE);
 	}
 
 
@@ -64,6 +72,16 @@ abstract class Facade extends \Nette\Object
 	public function getRepository()
 	{
 		return $this->repository;
+	}
+
+
+
+	/**
+	 * @return \Nette\Caching\Cache
+	 */
+	public function getCache()
+	{
+		return $this->cache;
 	}
 
 
