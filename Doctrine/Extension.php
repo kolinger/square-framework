@@ -92,6 +92,14 @@ class Extension extends \Nette\Config\CompilerExtension
 		$container->addDefinition($this->prefix('createSchemaToolConsoleCommand'))
 			->setClass('Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand')
 			->addTag('consoleCommand');
+
+		$container->addDefinition($this->prefix('metadataClearCacheConsoleCommand'))
+			->setClass('Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand')
+			->addTag('consoleCommand');
+
+		$container->addDefinition($this->prefix('queryClearCacheConsoleCommand'))
+			->setClass('Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand')
+			->addTag('consoleCommand');
 	}
 
 
