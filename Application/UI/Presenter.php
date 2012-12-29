@@ -33,6 +33,11 @@ class Presenter extends \Nette\Application\UI\Presenter
 	 */
 	private $serviceLocator;
 
+	/**
+	 * @var array
+	 */
+	private $layouts = array();
+
 
 
 	/**
@@ -142,6 +147,27 @@ class Presenter extends \Nette\Application\UI\Presenter
 		}
 
 		return $this->autowire[$name]['value'];
+	}
+
+
+
+	/**
+	 * @param string $layout
+	 */
+	public function addLayout($layout)
+	{
+		$this->layouts[] = $layout;
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	public function formatLayoutTemplateFiles()
+	{
+		$list = parent::formatLayoutTemplateFiles();
+		return array_merge($list, $this->layouts);
 	}
 
 }
