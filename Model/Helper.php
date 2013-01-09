@@ -27,7 +27,8 @@ class Helper extends \Nette\Object
 
 	/**
 	 * @param \Exception $e
-	 * @return \Doctrine\DBAL\DBALException|\Exception|\PDOException
+	 * @throws \Exception
+	 * @throws \PDOException
 	 * @throws EmptyValueException
 	 * @throws DuplicateEntryException
 	 * @throws \Nette\InvalidArgumentException
@@ -44,7 +45,7 @@ class Helper extends \Nette\Object
 		} elseif ($e instanceof \PDOException) {
 			$info = $e->errorInfo;
 		} else {
-			return $e;
+			throw $e;
 		}
 
 		if ($info[0] == 23000 && $info[1] == 1062) { // unique fail
@@ -56,7 +57,7 @@ class Helper extends \Nette\Object
 			$name = substr($name, 0, strpos($name, "'"));
 			throw new \Square\Model\EmptyValueException($e->getMessage(), $name, $e);
 		} else {
-			return $e;
+			throw $e;
 		}
 	}
 
