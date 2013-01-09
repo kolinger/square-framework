@@ -51,6 +51,15 @@ class Presenter extends \Nette\Application\UI\Presenter
 
 
 
+	protected function startup()
+	{
+		parent::startup();
+
+		$this->getTemplate()->setTranslator($this->translator);
+	}
+
+
+
 	/**
 	 * @return string
 	 */
