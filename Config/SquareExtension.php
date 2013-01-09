@@ -25,6 +25,7 @@ class SquareExtension extends \Nette\Config\CompilerExtension
 		'namespaces' => array(
 			'App' => 10,
 		),
+		'modules' => array(),
 	);
 
 
@@ -34,8 +35,12 @@ class SquareExtension extends \Nette\Config\CompilerExtension
 		$container = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
 
-		$presenterFactory = $container->getDefinition('nette.presenterFactory');
-		$presenterFactory->setClass('Square\Application\PresenterFactory', array($config['namespaces']));
+		$container->getDefinition('nette.presenterFactory')
+			->setClass('Square\Application\PresenterFactory', array($config['namespaces']));
+
+		foreach ($config['modules'] as $extension) {
+			$this->compiler->addExtension($extension::NAME, new $extension);
+		}
 	}
 
 }
