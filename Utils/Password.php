@@ -125,7 +125,6 @@ class Password extends \Nette\Object
 		if ($value instanceof Password) {
 			return $this->getHash() === $value->getHash();
 		} else {
-			dump($this->getHash(), $this->getHash($value));
 			return $this->getHash() === $this->getHash($value);
 		}
 	}
