@@ -41,6 +41,9 @@ class SquareExtension extends \Nette\Config\CompilerExtension
 		foreach ($config['modules'] as $extension) {
 			$this->compiler->addExtension($extension::NAME, new $extension);
 		}
+
+		$container->addDefinition($this->prefix('translator'))
+			->setClass('Square\Localization\DummyTranslator');
 	}
 
 }
