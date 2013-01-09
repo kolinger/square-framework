@@ -3,9 +3,9 @@
 /**
  * @param $string
  * @return string
- * @todo implements translator
  */
 function __($string)
 {
-	return $string;
+	$translator = \Nette\Environment::getContext()->getByType('Nette\Localization\ITranslator');
+	return callback($translator, 'translate')->invokeArgs(func_get_args());
 }
