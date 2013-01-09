@@ -38,6 +38,31 @@ class Presenter extends \Nette\Application\UI\Presenter
 	 */
 	private $layouts = array();
 
+	/**
+	 * @var string
+	 */
+	private $title;
+
+
+
+	/**
+	 * @return string
+	 */
+	public function getTitle()
+	{
+		return $this->title;
+	}
+
+
+
+	/**
+	 * @param string
+	 */
+	public function setTitle($title)
+	{
+		$this->title = $title;
+	}
+
 
 
 	/**
