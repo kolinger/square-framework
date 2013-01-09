@@ -24,6 +24,9 @@ use Nette\Utils\Strings;
 class Password extends \Nette\Object
 {
 
+	/**
+	 * Parts delimiter
+	 */
 	const DELIMITER = '$';
 
 	/**
@@ -44,26 +47,16 @@ class Password extends \Nette\Object
 
 
 	/**
-	 * @param string|NULL $hash
-	 */
-	public function __construct($hash = NULL)
-	{
-		if ($hash) {
-			$this->setHash($hash);
-		}
-	}
-
-
-
-	/**
 	 * @param string|NULL $password
 	 * @return string
 	 */
 	public function setPassword($password = NULL)
 	{
 		$this->salt = Strings::random();
-		$password = $password === NULL ? Strings::random() : $password;
-		$this->password = hash($this->algorithm, $this->salt . $password);
+		if ($password === NULL) {
+			$password = Strings::random();
+		}
+		$this->password = $this->generateHash($password);
 		return $password;
 	}
 
@@ -82,21 +75,13 @@ class Password extends \Nette\Object
 
 
 	/**
-	 * @param string $password
 	 * @return string
 	 */
-	public function getHash($password = NULL)
+	public function getHash()
 	{
-		$hash = $this->algorithm . self::DELIMITER
-			. $this->salt . self::DELIMITER;
-
-		if ($password === NULL) {
-			$hash .= $this->password;
-		} else {
-			$hash .= hash($this->algorithm, $this->salt . $password);
-		}
-
-		return $hash;
+		return $this->algorithm . self::DELIMITER
+			. $this->salt . self::DELIMITER
+			. $this->password;
 	}
 
 
@@ -125,8 +110,19 @@ class Password extends \Nette\Object
 		if ($value instanceof Password) {
 			return $this->getHash() === $value->getHash();
 		} else {
-			return $this->getHash() === $this->getHash($value);
+			return $this->password === $this->generateHash($value);
 		}
+	}
+
+
+
+	/**
+	 * @param $password
+	 * @return string
+	 */
+	protected function generateHash($password)
+	{
+		return hash($this->algorithm, $this->salt . $password);
 	}
 
 }
