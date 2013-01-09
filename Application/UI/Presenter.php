@@ -24,6 +24,12 @@ class Presenter extends \Nette\Application\UI\Presenter
 	const CACHE_NAMESPACE = 'Square.Presenter.Autowire';
 
 	/**
+	 * @var \Nette\Localization\ITranslator
+	 * @autowire
+	 */
+	protected $translator;
+
+	/**
 	 * @var array
 	 */
 	private $autowire = array();
@@ -60,7 +66,7 @@ class Presenter extends \Nette\Application\UI\Presenter
 	 */
 	public function setTitle($title)
 	{
-		$this->title = $title;
+		$this->title = $this->translator->translate($title);
 	}
 
 
