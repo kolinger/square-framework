@@ -62,8 +62,9 @@ class Password extends \Nette\Object
 	public function setPassword($password = NULL)
 	{
 		$this->salt = Strings::random();
-		$this->password = $password === NULL ? Strings::random() : $password;
-		return $this->password;
+		$password = $password === NULL ? Strings::random() : $password;
+		$this->password = hash($this->algorithm, $this->salt . $password);
+		return $password;
 	}
 
 
@@ -81,13 +82,20 @@ class Password extends \Nette\Object
 
 
 	/**
+	 * @param string $password
 	 * @return string
 	 */
-	public function getHash()
+	public function getHash($password = NULL)
 	{
 		$hash = $this->algorithm . self::DELIMITER
-			. $this->salt . self::DELIMITER
-			. hash($this->algorithm, $this->salt . $this->password);
+			. $this->salt . self::DELIMITER;
+
+		if ($password === NULL) {
+			$hash .= $this->password;
+		} else {
+			$hash .= hash($this->algorithm, $this->salt . $password);
+		}
+
 		return $hash;
 	}
 
@@ -117,7 +125,8 @@ class Password extends \Nette\Object
 		if ($value instanceof Password) {
 			return $this->getHash() === $value->getHash();
 		} else {
-			return $this->getHash() === $value;
+			dump($this->getHash(), $this->getHash($value));
+			return $this->getHash() === $this->getHash($value);
 		}
 	}
 
