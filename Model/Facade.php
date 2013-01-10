@@ -138,6 +138,13 @@ abstract class Facade extends \Nette\Object
 
 
 
+	public function flush()
+	{
+		$this->entityManager->flush();
+	}
+
+
+
 	/**
 	 * @return array
 	 */
