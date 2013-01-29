@@ -19,7 +19,8 @@
 		"doctrine/dbal": "2.3.2",
 		"doctrine/common": "2.3.0",
 		"symfony/console": "2.1.7",
-		"janmarek/webloader": "dev-master"
+		"janmarek/webloader": "dev-master",
+		"pavelkucera/navigation": "dev-master"
 	},
 	"minimum-stability": "dev"
 }
