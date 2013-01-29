@@ -1,0 +1,20 @@
+{
+	"name": "square/framework",
+	"license": ["GPL-2.0", "GPL-3.0"],
+	"authors": [
+		{
+			"name": "Tomáš Kolinger",
+			"homepage": "http://tomas.kolinger.name"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"Square\\": "src/"
+		}
+	},
+	"require": {
+		"php": ">= 5.3.0",
+		"nette/nette": "2.0.*",
+		"doctrine/orm": "2.3.*"
+	}
+}
