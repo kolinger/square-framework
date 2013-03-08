@@ -61,6 +61,11 @@ class Presenter extends \Nette\Application\UI\Presenter
 	{
 		parent::startup();
 
+		// translator
+		if (!isset($this->lang)) {
+			$this->lang = $this->getContext()->parameters["lang"];
+		}
+		$this->translator->setLang($this->lang);
 		$this->getTemplate()->setTranslator($this->translator);
 	}
 
@@ -247,26 +252,6 @@ class Presenter extends \Nette\Application\UI\Presenter
 		}
 
 		parent::checkRequirements($element);
-	}
-
-
-
-	/**
-	 * @param string $class
-	 * @return \Nette\Templating\ITemplate
-	 */
-	public function createTemplate($class = NULL)
-	{
-		$template = parent::createTemplate($class);
-
-		if (!isset($this->lang)) {
-			$this->lang = $this->getContext()->parameters["lang"];
-		}
-
-		$this->translator->setLang($this->lang);
-		$template->setTranslator($this->translator);
-
-		return $template;
 	}
 
 }

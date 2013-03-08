@@ -45,12 +45,6 @@ class SquareExtension extends \Square\Config\CompilerExtension
 				'@container',
 				$config['namespaces']
 			));
-
-		$container->addDefinition($this->prefix('translator'))
-			->setClass('Square\Localization\GettextTranslator\Gettext')
-			->setFactory('Square\Localization\GettextTranslator\Gettext::getTranslator')
-			->addSetup('$service->addFile(\'%appDir%/lang\', ?)', array('dictionary'))
-			->addSetup('Square\Localization\GettextTranslator\Panel::register');
 	}
 
 }
