@@ -81,6 +81,11 @@ class Gettext extends Nette\Object implements IEditable
 	/** @var Nette\Caching\Cache */
 	protected $cache;
 
+	/**
+	 * @var string
+	 */
+	private $activeDictionary;
+
 
 	/**
 	 * Constructor
@@ -108,6 +113,26 @@ class Gettext extends Nette\Object implements IEditable
 
 		if(!isset($storage->newStrings) || !is_array($storage->newStrings))
 				$storage->newStrings = array();
+	}
+
+
+
+	/**
+	 * @param string $activeDictionary
+	 */
+	public function setActiveDictionary($activeDictionary)
+	{
+		$this->activeDictionary = $activeDictionary;
+	}
+
+
+
+	/**
+	 * @return string
+	 */
+	public function getActiveDictionary()
+	{
+		return $this->activeDictionary;
 	}
 
 

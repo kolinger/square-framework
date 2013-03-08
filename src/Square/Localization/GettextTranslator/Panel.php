@@ -83,12 +83,7 @@ class Panel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 		$translator = $this->translator;
 		$files = array_keys($translator->getFiles());
 		$strings = $translator->getStrings();
-
-		$requests = $this->container->application->requests;
-		$count = count($requests);
-		$presenterName = ($count > 0) ? $requests[count($requests) - 1]->presenterName : NULL;
-		$module = (!$presenterName) ? : strtolower(str_replace(':', '.', ltrim(substr($presenterName, 0, -(strlen(strrchr($presenterName, ':')))), ':')));
-		$activeFile = (in_array($module, $files)) ? $module : $files[0];
+		$activeFile = (in_array($translator->getActiveDictionary(), $files)) ? $translator->getActiveDictionary() : $files[0];
 
 		if ($this->container->session->isStarted()) {
 			$session = $this->container->session->getSection(static::SESSION_NAMESPACE);
