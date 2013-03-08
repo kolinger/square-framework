@@ -15,16 +15,16 @@ namespace Square\Config;
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class SquareExtension extends \Nette\Config\CompilerExtension
+class SquareExtension extends \Square\Config\CompilerExtension
 {
+
+	const NAME = 'square';
 
 	/**
 	 * @var array
 	 */
 	private $defaults = array(
-		'namespaces' => array(
-			'App' => 10,
-		),
+		'namespaces' => array(),
 		'modules' => array(),
 	);
 
@@ -35,15 +35,22 @@ class SquareExtension extends \Nette\Config\CompilerExtension
 		$container = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
 
-		$container->getDefinition('nette.presenterFactory')
-			->setClass('Square\Application\PresenterFactory', array($config['namespaces']));
-
-		foreach ($config['modules'] as $extension) {
+		foreach ($config['extensions'] as $extension) {
 			$this->compiler->addExtension($extension::NAME, new $extension);
 		}
 
+		$container->getDefinition('nette.presenterFactory')
+			->setClass('Square\Application\PresenterFactory', array(
+				isset($container->parameters['appDir']) ? $container->parameters['appDir'] : NULL,
+				'@container',
+				$config['namespaces']
+			));
+
 		$container->addDefinition($this->prefix('translator'))
-			->setClass('Square\Localization\DummyTranslator');
+			->setClass('Square\Localization\GettextTranslator\Gettext')
+			->setFactory('Square\Localization\GettextTranslator\Gettext::getTranslator')
+			->addSetup('$service->addFile(\'%appDir%/lang\', ?)', array('dictionary'))
+			->addSetup('Square\Localization\GettextTranslator\Panel::register');
 	}
 
 }

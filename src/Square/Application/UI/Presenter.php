@@ -24,7 +24,13 @@ class Presenter extends \Nette\Application\UI\Presenter
 	const CACHE_NAMESPACE = 'Square.Presenter.Autowire';
 
 	/**
-	 * @var \Nette\Localization\ITranslator
+	 * @var string
+	 * @persistent
+	 */
+	public $lang;
+
+	/**
+	 * @var \Square\Localization\GettextTranslator\Gettext
 	 * @autowire
 	 */
 	protected $translator;
@@ -71,11 +77,37 @@ class Presenter extends \Nette\Application\UI\Presenter
 
 
 	/**
-	 * @param string
+	 * @param $title
+	 * @param array $args
 	 */
-	public function setTitle($title)
+	public function setTitle($title, $args = array())
 	{
-		$this->title = $this->translator->translate($title);
+		if (count($args)) {
+			$this->title = $this->translator->translate($title, NULL, $args);
+		} else {
+			$this->title = $this->translator->translate($title);
+		}
+	}
+
+
+
+	/**
+	 * @param string $layout
+	 */
+	public function addLayout($layout)
+	{
+		$this->layouts[] = $layout;
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	public function formatLayoutTemplateFiles()
+	{
+		$list = parent::formatLayoutTemplateFiles();
+		return array_merge($list, $this->layouts);
 	}
 
 
@@ -192,22 +224,49 @@ class Presenter extends \Nette\Application\UI\Presenter
 
 
 	/**
-	 * @param string $layout
+	 * @param object $element
+	 * @throws \Nette\InvalidStateException
+	 * @throws \Nette\Application\ForbiddenRequestException
 	 */
-	public function addLayout($layout)
+	public function checkRequirements($element)
 	{
-		$this->layouts[] = $layout;
+		if ($element instanceof \Nette\Reflection\Method && $element->hasAnnotation('privilege')) {
+			if ($element->hasAnnotation('resource')) {
+				$resource = $element->getAnnotation('resource');
+			} else {
+				$presenter = $element->getDeclaringClass();
+				if (!$presenter->hasAnnotation('resource')) {
+					throw new \Nette\InvalidStateException('@resource annotation must be declared');
+				}
+				$resource = $presenter->getAnnotation('resource');
+			}
+
+			if (!$this->getUser()->isAllowed($resource, $element->getAnnotation('privilege'))) {
+				throw new \Nette\Application\ForbiddenRequestException(NULL, 403);
+			}
+		}
+
+		parent::checkRequirements($element);
 	}
 
 
 
 	/**
-	 * @return array
+	 * @param string $class
+	 * @return \Nette\Templating\ITemplate
 	 */
-	public function formatLayoutTemplateFiles()
+	public function createTemplate($class = NULL)
 	{
-		$list = parent::formatLayoutTemplateFiles();
-		return array_merge($list, $this->layouts);
+		$template = parent::createTemplate($class);
+
+		if (!isset($this->lang)) {
+			$this->lang = $this->getContext()->parameters["lang"];
+		}
+
+		$this->translator->setLang($this->lang);
+		$template->setTranslator($this->translator);
+
+		return $template;
 	}
 
 }

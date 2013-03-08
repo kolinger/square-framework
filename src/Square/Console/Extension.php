@@ -15,8 +15,10 @@ namespace Square\Console;
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Extension extends \Nette\Config\CompilerExtension
+class Extension extends \Square\Config\CompilerExtension
 {
+
+	const NAME = 'console';
 
 	/**
 	 * @var array

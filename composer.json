@@ -1,5 +1,5 @@
 {
-	"name": "kolinger/square-framework",
+	"name": "square/framework",
 	"license": ["GPL-2.0", "GPL-3.0"],
 	"authors": [
 		{
@@ -19,9 +19,6 @@
 		"doctrine/dbal": "2.3.2",
 		"doctrine/common": "2.3.0",
 		"symfony/console": "2.1.7",
-		"janmarek/webloader": "dev-master",
-		"pavelkucera/navigation": "dev-master",
-		"nextras/datagrid": "dev-master"
 	},
 	"minimum-stability": "dev"
 }

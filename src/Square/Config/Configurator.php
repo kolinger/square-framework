@@ -25,9 +25,9 @@ class Configurator extends \Nette\Config\Configurator
 	{
 		$compiler = parent::createCompiler();
 
-		$compiler->addExtension('square', new SquareExtension);
-		$compiler->addExtension('doctrine', new \Square\Doctrine\Extension);
-		$compiler->addExtension('console', new \Square\Console\Extension);
+		$compiler->addExtension(SquareExtension::NAME, new SquareExtension);
+		$compiler->addExtension(\Square\Doctrine\Extension::NAME, new \Square\Doctrine\Extension);
+		$compiler->addExtension(\Square\Console\Extension::NAME, new \Square\Console\Extension);
 
 		return $compiler;
 	}

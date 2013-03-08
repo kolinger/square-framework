@@ -15,26 +15,33 @@ namespace Square\Doctrine;
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Extension extends \Nette\Config\CompilerExtension
+class Extension extends \Square\Config\CompilerExtension
 {
+
+	const NAME = 'doctrine';
 
 	/**
 	 * @var array
 	 */
 	private $defaults = array(
 		'entitiesDirs' => array('%appDir%'),
+		'ignoredAnnotations' => array('resource', 'privilege'),
 		'proxyDir' => '%appDir%/proxies',
 		'proxyNamespace' => 'Proxies',
 		'defaultRepositoryClassName' => 'Doctrine\ORM\EntityRepository',
-		'connection' => array(
-			'driver' => 'pdo_mysql',
-			'host' => 'localhost',
-			'user' => 'root',
-			'password' => '',
-			'charset' => 'utf8',
-			'collation' => 'utf8_czech_ci',
-			'dbname' => '',
-		),
+	);
+
+	/**
+	 * @var array
+	 */
+	private $connectionDefaults = array(
+		'driver' => 'pdo_mysql',
+		'host' => '127.0.0.1',
+		'user' => 'root',
+		'password' => '',
+		'charset' => 'utf8',
+		'collation' => 'utf8_czech_ci',
+		'dbname' => '',
 	);
 
 
@@ -42,14 +49,15 @@ class Extension extends \Nette\Config\CompilerExtension
 	public function loadConfiguration()
 	{
 		$container = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults); // TODO: prevent overwriting 'connection' section
+		$config = $this->getConfig($this->defaults);
+		$config['connection'] = array_merge($this->connectionDefaults, $config['connection']);
 
 		$container->addDefinition($this->prefix('cache'))
 			->setClass('Square\Doctrine\Cache');
 
 		$container->addDefinition($this->prefix('metadataDriver'))
 			->setClass('Doctrine\ORM\Mapping\Driver\AnnotationDriver')
-			->setFactory(get_called_class() . '::createAnnotationDriver', array($config['entitiesDirs']));
+			->setFactory(get_called_class() . '::createAnnotationDriver', array($config['entitiesDirs'], $config['ignoredAnnotations']));
 
 		$container->addDefinition($this->prefix('logger'))
 			->setClass('Square\Doctrine\Logger');
@@ -136,15 +144,19 @@ class Extension extends \Nette\Config\CompilerExtension
 
 	/**
 	 * @param array $entitiesDirs
+	 * @param array $ignoredAnnotations
 	 * @param Cache $cache
 	 * @return \Doctrine\ORM\Mapping\Driver\AnnotationDriver
 	 */
-	public static function createAnnotationDriver(array $entitiesDirs, Cache $cache)
+	public static function createAnnotationDriver(array $entitiesDirs, array $ignoredAnnotations, Cache $cache)
 	{
 		$doctrinePath = dirname(\Nette\Reflection\ClassType::from('Doctrine\ORM\Version')->getFileName());
 		\Doctrine\Common\Annotations\AnnotationRegistry::registerFile($doctrinePath . '/Mapping/Driver/DoctrineAnnotations.php');
 
 		$reader = new \Doctrine\Common\Annotations\AnnotationReader();
+		foreach ($ignoredAnnotations as $ignoredAnnotation) {
+			$reader->addGlobalIgnoredName($ignoredAnnotation);
+		}
 		$cachedReader = new \Doctrine\Common\Annotations\CachedReader($reader, $cache);
 
 		return new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedReader, $entitiesDirs);
