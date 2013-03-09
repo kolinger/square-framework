@@ -22,8 +22,8 @@ abstract class Facade extends \Nette\Object
 {
 
 	const CACHE_NAMESPACE = 'Square.Model';
-	const FLUSH = true,
-		WITHOUT_FLUSH = false;
+	const FLUSH = TRUE,
+		WITHOUT_FLUSH = FALSE;
 
 	/**
 	 * @var \Doctrine\ORM\EntityManager
@@ -162,6 +162,76 @@ abstract class Facade extends \Nette\Object
 	protected function createQueryBuilder($alias)
 	{
 		return $this->repository->createQueryBuilder($alias);
+	}
+
+
+
+	/**
+	 * @param array $mapping
+	 * @param array $filter
+	 * @param array $order
+	 * @return array
+	 */
+	public function getDatagridData(array $mapping, $filter = NULL, $order = NULL)
+	{
+		$name = 'entity';
+		$qb = $this->createQueryBuilder($name);
+
+		$this->applyDatagridFilters($qb, $name, $mapping, $filter);
+		$this->applyDatagridOrder($qb, $name, $mapping, $order);
+
+		$q = $qb->getQuery();
+		return $q->getResult();
+	}
+
+
+
+	/**
+	 * @param \Doctrine\ORM\QueryBuilder $qb
+	 * @param string $name
+	 * @param array $mapping
+	 * @param array $filter
+	 */
+	protected function applyDatagridFilters(\Doctrine\ORM\QueryBuilder $qb, $name, array $mapping, $filter = NULL)
+	{
+		if ($filter) {
+			$number = 1;
+			foreach ($filter as $column => $value) {
+				if (isset($mapping[$column])) {
+					$column = $mapping[$column]['accessor'];
+				} else {
+					$column = $name . '.' . $column;
+				}
+				if ($number == 1) {
+					$qb->where($qb->expr()->like($column, '?' . $number))
+						->setParameter($number, '%' . $value . '%');
+				} else {
+					$qb->where($qb->expr()->like($column, '?' . $number))
+						->setParameter($number, '%' . $value . '%');
+				}
+				$number++;
+			}
+		}
+	}
+
+
+
+	/**
+	 * @param \Doctrine\ORM\QueryBuilder $qb
+	 * @param string $name
+	 * @param array $mapping
+	 * @param array $order
+	 */
+	protected function applyDatagridOrder(\Doctrine\ORM\QueryBuilder $qb, $name, array $mapping, $order = NULL)
+	{
+		if ($order) {
+			if (isset($mapping[$order[0]])) {
+				$column = $mapping[$order[0]]['accessor'];
+			} else {
+				$column = $name . '.' . $order[0];
+			}
+			$qb->orderBy($column, $order[1]);
+		}
 	}
 
 }
