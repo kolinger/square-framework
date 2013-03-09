@@ -19,6 +19,17 @@ class Configurator extends \Nette\Config\Configurator
 {
 
 	/**
+	 * @return \SystemContainer
+	 */
+	public function createContainer()
+	{
+		\Square\Forms\Controls\CheckboxList::register();
+		return parent::createContainer();
+	}
+
+
+
+	/**
 	 * @return \Nette\Config\Compiler
 	 */
 	protected function createCompiler()
