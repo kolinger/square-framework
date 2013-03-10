@@ -141,8 +141,8 @@ class DateTime extends \Nette\Forms\Controls\BaseControl
 	 */
 	public static function register($name = 'addDateTime')
 	{
-		Container::extensionMethod($name, function (Container $container, $name, $label = NULL, $class = NULL) {
-			return $container[$name] = new DateTime($label, $class);
+		Container::extensionMethod($name, function (Container $container, $name, $label = NULL) {
+			return $container[$name] = new DateTime($label);
 		});
 	}
 
