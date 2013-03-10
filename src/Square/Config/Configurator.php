@@ -26,6 +26,7 @@ class Configurator extends \Nette\Config\Configurator
 		\Square\Forms\Controls\CheckboxList::register();
 		\Square\Forms\Controls\DateTime::register();
 		\Square\Forms\Controls\TagsInput::register();
+		\Square\Forms\Controls\Editor::register();
 		return parent::createContainer();
 	}
 
