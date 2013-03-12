@@ -45,6 +45,9 @@ class SquareExtension extends \Square\Config\CompilerExtension
 				'@container',
 				$config['namespaces']
 			));
+
+		$container->getDefinition('nette.latte')
+			->addSetup('Square\Thumbnails\LatteMacros::factory', array('@self'));
 	}
 
 }
