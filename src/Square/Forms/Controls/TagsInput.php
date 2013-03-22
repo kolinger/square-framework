@@ -11,13 +11,13 @@
 namespace Square\Forms\Controls;
 
 use Nette\Forms\Container;
-
+use Nette\Forms\Controls\TextInput;
 
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class TagsInput extends \Nette\Forms\Controls\TextInput
+class TagsInput extends TextInput
 {
 
 	const DELIMITER = ',';

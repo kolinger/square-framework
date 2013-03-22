@@ -11,16 +11,20 @@
 namespace Square\Model;
 
 
+use Doctrine\DBAL\DBALException;
+use Nette\InvalidArgumentException;
+use Nette\Object;
+use Nette\StaticClassException;
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Helper extends \Nette\Object
+class Helper extends Object
 {
 
 	public function __construct()
 	{
-		throw new \Nette\StaticClassException;
+		throw new StaticClassException;
 	}
 
 
@@ -28,19 +32,19 @@ class Helper extends \Nette\Object
 	/**
 	 * @param \Exception $e
 	 * @throws \Exception
-	 * @throws \PDOException
-	 * @throws EmptyValueException
 	 * @throws DuplicateEntryException
-	 * @throws \Nette\InvalidArgumentException
+	 * @throws DBALException|\PDOException
+	 * @throws EmptyValueException
+	 * @throws InvalidArgumentException
 	 */
 	public static function convertException(\Exception $e)
 	{
-		if ($e instanceof \Doctrine\DBAL\DBALException) {
+		if ($e instanceof DBALException) {
 			$pe = $e->getPrevious();
 			if ($pe instanceof \PDOException) {
 				$info = $pe->errorInfo;
 			} else {
-				throw new \Nette\InvalidArgumentException('Not supported DBAL exception type', 0, $e);
+				throw new InvalidArgumentException('Not supported DBAL exception type', 0, $e);
 			}
 		} elseif ($e instanceof \PDOException) {
 			$info = $e->errorInfo;
@@ -50,12 +54,12 @@ class Helper extends \Nette\Object
 
 		if ($info[0] == 23000 && $info[1] == 1062) { // unique fail
 			$key = preg_match('#for key \'([a-z0-9\-_]*)\'#i', $e->getMessage(), $matches) ? $matches[1] : NULL;
-			throw new \Square\Model\DuplicateEntryException($e->getMessage(), $key, $e);
+			throw new DuplicateEntryException($e->getMessage(), $key, $e);
 		} elseif ($info[0] == 23000 && $info[1] == 1048) { // notnull fail
 			// @todo convert table column name to entity column name
 			$name = substr($info[2], strpos($info[2], "'") + 1);
 			$name = substr($name, 0, strpos($name, "'"));
-			throw new \Square\Model\EmptyValueException($e->getMessage(), $name, $e);
+			throw new EmptyValueException($e->getMessage(), $name, $e);
 		} else {
 			throw $e;
 		}

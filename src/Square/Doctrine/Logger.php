@@ -10,10 +10,15 @@
 
 namespace Square\Doctrine;
 
+use Doctrine\DBAL\Logging\SQLLogger;
+use Nette\Database\Diagnostics\ConnectionPanel;
 use Nette\Diagnostics\Debugger,
 	Nette\Utils\Strings,
 	Doctrine\DBAL\Connection,
 	Nette\Database\Helpers;
+use Nette\Diagnostics\IBarPanel;
+use Nette\InvalidStateException;
+use Nette\Object;
 
 /**
  * Debug panel for Doctrine
@@ -22,7 +27,7 @@ use Nette\Diagnostics\Debugger,
  * @author	Patrik Votoček
  * @author	Michael Moravec
  */
-class Logger extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doctrine\DBAL\Logging\SQLLogger
+class Logger extends Object implements IBarPanel, SQLLogger
 {
 	const SQL = 0,
 		PARAMS = 1,
@@ -87,7 +92,7 @@ class Logger extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doc
 		// get EXPLAIN for SELECT queries
 		if ($this->doExplains) {
 			if ($this->connection === NULL) {
-				throw new \Nette\InvalidStateException('You must set a Doctrine\DBAL\Connection to get EXPLAIN.');
+				throw new InvalidStateException('You must set a Doctrine\DBAL\Connection to get EXPLAIN.');
 			}
 
 			$query = $this->queries[$key][self::SQL];
@@ -180,8 +185,9 @@ class Logger extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doc
 				'panel' => $this->renderStyles() . '<div class="nette-inner nette-Doctrine2Panel">' . $s . '</div>',
 			);
 		} else {
-			\Nette\Database\Diagnostics\ConnectionPanel::renderException($e);
+			ConnectionPanel::renderException($e);
 		}
+		return array();
 	}
 
 	public function getPanel()
@@ -201,4 +207,3 @@ class Logger extends \Nette\Object implements \Nette\Diagnostics\IBarPanel, \Doc
 			</div>';
 	}
 }
-

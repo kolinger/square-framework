@@ -11,13 +11,13 @@
 namespace Square\Forms\Controls;
 
 use Nette\Forms\Container;
-
+use Nette\Forms\Controls\TextArea;
 
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Editor extends \Nette\Forms\Controls\TextArea
+class Editor extends TextArea
 {
 
 	/**

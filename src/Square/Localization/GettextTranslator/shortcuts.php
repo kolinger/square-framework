@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) 2010 Patrik Votoček <patrik@votocek.cz>
  *
  * Permission is hereby granted, free of charge, to any person
@@ -44,7 +44,7 @@ function __($message)
  * Translates the given string with plural.
  *
  * @param string $single
- * @param string $plural 
+ * @param string $plural
  * @param int $muber plural form (positive number)
  * @return string
  */
@@ -57,7 +57,7 @@ function _n($single, $plural, $number)
  * Translates the given string with vsprintf.
  *
  * @param string $message
- * @paran array $args for vsprintf 
+ * @paran array $args for vsprintf
  * @return string
  */
 function _x($message, array $args)
@@ -69,7 +69,7 @@ function _x($message, array $args)
  * Translates the given string with plural and vsprintf.
  *
  * @param string $single
- * @param string $plural 
+ * @param string $plural
  * @param int $muber plural form (positive number)
  * @return string
  */

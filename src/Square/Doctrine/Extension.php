@@ -11,11 +11,22 @@
 namespace Square\Doctrine;
 
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\EventManager;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Event\Listeners\MysqlSessionInit;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Nette\Diagnostics\Debugger;
+use Nette\Reflection\ClassType;
+use Square\Config\CompilerExtension;
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Extension extends \Square\Config\CompilerExtension
+class Extension extends CompilerExtension
 {
 
 	const NAME = 'doctrine';
@@ -115,26 +126,26 @@ class Extension extends \Square\Config\CompilerExtension
 	/**
 	 * @param array $config
 	 * @param Logger $logger
-	 * @param \Doctrine\ORM\Configuration $configuration
+	 * @param Configuration $configuration
 	 * @return \Doctrine\DBAL\Connection
 	 */
-	public static function createConnection(array $config, Logger $logger, \Doctrine\ORM\Configuration $configuration)
+	public static function createConnection(array $config, Logger $logger, Configuration $configuration)
 	{
-		$eventManager = new \Doctrine\Common\EventManager;
+		$eventManager = new EventManager;
 		$eventManager->addEventSubscriber(
-			new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit($config['charset'], $config['collation'])
+			new MysqlSessionInit($config['charset'], $config['collation'])
 		);
 
-		$connection = \Doctrine\DBAL\DriverManager::getConnection(
+		$connection = DriverManager::getConnection(
 			$config,
 			$configuration,
 			$eventManager
 		);
 
-		if (\Nette\Diagnostics\Debugger::$bar) {
-			\Nette\Diagnostics\Debugger::$bar->addPanel($logger);
+		if (Debugger::$bar) {
+			Debugger::$bar->addPanel($logger);
 		}
-		\Nette\Diagnostics\Debugger::$blueScreen->addPanel(array($logger, 'renderException'));
+		Debugger::$blueScreen->addPanel(array($logger, 'renderException'));
 		$logger->setConnection($connection);
 
 		return $connection;
@@ -146,20 +157,20 @@ class Extension extends \Square\Config\CompilerExtension
 	 * @param array $entitiesDirs
 	 * @param array $ignoredAnnotations
 	 * @param Cache $cache
-	 * @return \Doctrine\ORM\Mapping\Driver\AnnotationDriver
+	 * @return AnnotationDriver
 	 */
 	public static function createAnnotationDriver(array $entitiesDirs, array $ignoredAnnotations, Cache $cache)
 	{
-		$doctrinePath = dirname(\Nette\Reflection\ClassType::from('Doctrine\ORM\Version')->getFileName());
-		\Doctrine\Common\Annotations\AnnotationRegistry::registerFile($doctrinePath . '/Mapping/Driver/DoctrineAnnotations.php');
+		$doctrinePath = dirname(ClassType::from('Doctrine\ORM\Version')->getFileName());
+		AnnotationRegistry::registerFile($doctrinePath . '/Mapping/Driver/DoctrineAnnotations.php');
 
-		$reader = new \Doctrine\Common\Annotations\AnnotationReader();
+		$reader = new AnnotationReader();
 		foreach ($ignoredAnnotations as $ignoredAnnotation) {
 			$reader->addGlobalIgnoredName($ignoredAnnotation);
 		}
-		$cachedReader = new \Doctrine\Common\Annotations\CachedReader($reader, $cache);
+		$cachedReader = new CachedReader($reader, $cache);
 
-		return new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($cachedReader, $entitiesDirs);
+		return new AnnotationDriver($cachedReader, $entitiesDirs);
 	}
 
 }

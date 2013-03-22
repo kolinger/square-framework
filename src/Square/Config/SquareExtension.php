@@ -15,7 +15,7 @@ namespace Square\Config;
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class SquareExtension extends \Square\Config\CompilerExtension
+class SquareExtension extends CompilerExtension
 {
 
 	const NAME = 'square';

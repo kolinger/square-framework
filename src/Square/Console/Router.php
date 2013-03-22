@@ -11,24 +11,30 @@
 namespace Square\Console;
 
 
+use Nette\Application\IRouter;
+use Nette\Application\Request;
+use Nette\Http\IRequest;
+use Nette\Http\Url;
+use Nette\Object;
+use Symfony\Component\Console\Application;
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Router extends \Nette\Object implements \Nette\Application\IRouter
+class Router extends Object implements IRouter
 {
 
 	/**
-	 * @var \Symfony\Component\Console\Application
+	 * @var Application
 	 */
 	private $console;
 
 
 
 	/**
-	 * @param \Symfony\Component\Console\Application $console
+	 * @param Application $console
 	 */
-	public function __construct(\Symfony\Component\Console\Application $console)
+	public function __construct(Application $console)
 	{
 		$this->console = $console;
 	}
@@ -36,13 +42,13 @@ class Router extends \Nette\Object implements \Nette\Application\IRouter
 
 
 	/**
-	 * @param \Nette\Http\IRequest $httpRequest
-	 * @return \Nette\Application\Request|NULL
+	 * @param IRequest $httpRequest
+	 * @return Request|NULL
 	 */
-	public function match(\Nette\Http\IRequest $httpRequest)
+	public function match(IRequest $httpRequest)
 	{
 		if (PHP_SAPI == 'cli') {
-			return new \Nette\Application\Request('Nette:Micro', 'CLI', array('callback' => callback($this->console, 'run')));
+			return new Request('Nette:Micro', 'CLI', array('callback' => callback($this->console, 'run')));
 		}
 		return NULL;
 	}
@@ -50,11 +56,11 @@ class Router extends \Nette\Object implements \Nette\Application\IRouter
 
 
 	/**
-	 * @param \Nette\Application\Request $appRequest
-	 * @param \Nette\Http\Url $refUrl
+	 * @param Request $appRequest
+	 * @param Url $refUrl
 	 * @return NULL|string
 	 */
-	public function constructUrl(\Nette\Application\Request $appRequest, \Nette\Http\Url $refUrl)
+	public function constructUrl(Request $appRequest, Url $refUrl)
 	{
 		return NULL;
 	}

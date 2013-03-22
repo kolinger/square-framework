@@ -11,13 +11,17 @@
 namespace Square\Forms\Controls;
 
 use Nette\Forms\Container;
-
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Form;
+use Nette\Forms\IControl;
+use Nette\Forms\Rule;
+use Nette\Forms\Rules;
 
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class DateTime extends \Nette\Forms\Controls\BaseControl
+class DateTime extends BaseControl
 {
 
 	/**
@@ -83,10 +87,10 @@ class DateTime extends \Nette\Forms\Controls\BaseControl
 
 
 	/**
-	 * @param \Nette\Forms\IControl $control
+	 * @param IControl $control
 	 * @return bool
 	 */
-	public static function validateFilled(\Nette\Forms\IControl $control)
+	public static function validateFilled(IControl $control)
 	{
 		return $control->getValue() != NULL;
 	}
@@ -94,10 +98,10 @@ class DateTime extends \Nette\Forms\Controls\BaseControl
 
 
 	/**
-	 * @param \Nette\Forms\IControl $control
+	 * @param IControl $control
 	 * @return bool
 	 */
-	public static function validateValid(\Nette\Forms\IControl $control)
+	public static function validateValid(IControl $control)
 	{
 		return ($control->getValue() == NULL || $control->getValue() instanceof \DateTime);
 	}
@@ -106,20 +110,20 @@ class DateTime extends \Nette\Forms\Controls\BaseControl
 
 	/**
 	 * @author Jan Tvrdík
-	 * @param \Nette\Forms\Rules $rules
+	 * @param Rules $rules
 	 * @return array
 	 */
-	protected function extractRangeRule(\Nette\Forms\Rules $rules)
+	protected function extractRangeRule(Rules $rules)
 	{
 		$controlMin = $controlMax = NULL;
 		foreach ($rules as $rule) {
-			if ($rule->type === \Nette\Forms\Rule::VALIDATOR) {
-				if ($rule->operation === \Nette\Forms\Form::RANGE && !$rule->isNegative) {
+			if ($rule->type === Rule::VALIDATOR) {
+				if ($rule->operation === Form::RANGE && !$rule->isNegative) {
 					$ruleMinMax = $rule->arg;
 				}
 
-			} elseif ($rule->type === \Nette\Forms\Rule::CONDITION) {
-				if ($rule->operation === \Nette\Forms\Form::FILLED && !$rule->isNegative && $rule->control === $this) {
+			} elseif ($rule->type === Rule::CONDITION) {
+				if ($rule->operation === Form::FILLED && !$rule->isNegative && $rule->control === $this) {
 					$ruleMinMax = $this->extractRangeRule($rule->subRules);
 				}
 			}

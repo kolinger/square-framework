@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) 2010 Jan Smitka <jan@smitka.org>
  *
  * Permission is hereby granted, free of charge, to any person
@@ -27,13 +27,15 @@
 
 namespace Square\Localization\GettextTranslator;
 
+use Nette\Localization\ITranslator;
+
 /**
  * Editable translator
  *
  * @author Jan Smitka <jan@smitka.org>
  * @author Vaclav Vrbka <gmvasek@php-info.cz>
  */
-interface IEditable extends \Nette\Localization\ITranslator
+interface IEditable extends ITranslator
 {
 	public function getVariantsCount();
 	public function getStrings($file = NULL);

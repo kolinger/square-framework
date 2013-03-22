@@ -11,11 +11,15 @@
 namespace Square\Console;
 
 
+use Nette\DI\Container;
+use Square\Config\CompilerExtension;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Extension extends \Square\Config\CompilerExtension
+class Extension extends CompilerExtension
 {
 
 	const NAME = 'console';
@@ -55,12 +59,12 @@ class Extension extends \Square\Config\CompilerExtension
 
 
 	/**
-	 * @param \Nette\DI\Container $container
-	 * @return \Symfony\Component\Console\Helper\HelperSet
+	 * @param Container $container
+	 * @return HelperSet
 	 */
-	public static function createHelperSet(\Nette\DI\Container $container)
+	public static function createHelperSet(Container $container)
 	{
-		$helperSet = new \Symfony\Component\Console\Helper\HelperSet;
+		$helperSet = new HelperSet;
 
 		$helpers = $container->findByTag('consoleHelper');
 		foreach ($helpers as $name => $value) {
@@ -74,13 +78,13 @@ class Extension extends \Square\Config\CompilerExtension
 
 	/**
 	 * @param array $config
-	 * @param \Nette\DI\Container $container
-	 * @param \Symfony\Component\Console\Helper\HelperSet $helperSet
-	 * @return \Symfony\Component\Console\Application
+	 * @param Container $container
+	 * @param HelperSet $helperSet
+	 * @return Application
 	 */
-	public static function createApplication(array $config, \Nette\DI\Container $container, \Symfony\Component\Console\Helper\HelperSet $helperSet)
+	public static function createApplication(array $config, Container $container, HelperSet $helperSet)
 	{
-		$application = new \Symfony\Component\Console\Application($config['name'], $config['version']);
+		$application = new Application($config['name'], $config['version']);
 		$application->setCatchExceptions($config['catchExceptions']);
 		$application->setHelperSet($helperSet);
 

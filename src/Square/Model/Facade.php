@@ -11,14 +11,21 @@
 namespace Square\Model;
 
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
+use Nette\Object;
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  *
- * @property-read \Doctrine\ORM\EntityManager $entityManager
- * @property-read \Doctrine\ORM\EntityRepository $repository
+ * @property-read EntityManager $entityManager
+ * @property-read EntityRepository $repository
  */
-abstract class Facade extends \Nette\Object
+abstract class Facade extends Object
 {
 
 	const CACHE_NAMESPACE = 'Square.Model';
@@ -26,38 +33,38 @@ abstract class Facade extends \Nette\Object
 		WITHOUT_FLUSH = FALSE;
 
 	/**
-	 * @var \Doctrine\ORM\EntityManager
+	 * @var EntityManager
 	 */
 	private $entityManager;
 
 	/**
-	 * @var \Doctrine\ORM\EntityRepository
+	 * @var EntityRepository
 	 */
 	private $repository;
 
 	/**
-	 * @var \Nette\Caching\Cache
+	 * @var Cache
 	 */
 	private $cache;
 
 
 
 	/**
-	 * @param \Doctrine\ORM\EntityRepository $repository
-	 * @param \Doctrine\ORM\EntityManager $entityManager
-	 * @param \Nette\Caching\IStorage $storage
+	 * @param EntityRepository $repository
+	 * @param EntityManager $entityManager
+	 * @param IStorage $storage
 	 */
-	public function __construct(\Doctrine\ORM\EntityRepository $repository, \Doctrine\ORM\EntityManager $entityManager, \Nette\Caching\IStorage $storage)
+	public function __construct(EntityRepository $repository, EntityManager $entityManager, IStorage $storage)
 	{
 		$this->entityManager = $entityManager;
 		$this->repository = $repository;
-		$this->cache = new \Nette\Caching\Cache($storage, self::CACHE_NAMESPACE);
+		$this->cache = new Cache($storage, self::CACHE_NAMESPACE);
 	}
 
 
 
 	/**
-	 * @return \Doctrine\ORM\EntityManager
+	 * @return EntityManager
 	 */
 	public function getEntityManager()
 	{
@@ -67,7 +74,7 @@ abstract class Facade extends \Nette\Object
 
 
 	/**
-	 * @return \Doctrine\ORM\EntityRepository
+	 * @return EntityRepository
 	 */
 	public function getRepository()
 	{
@@ -77,7 +84,7 @@ abstract class Facade extends \Nette\Object
 
 
 	/**
-	 * @return \Nette\Caching\Cache
+	 * @return Cache
 	 */
 	public function getCache()
 	{
@@ -109,7 +116,7 @@ abstract class Facade extends \Nette\Object
 			if ($flush == self::FLUSH) {
 				$this->entityManager->flush();
 			}
-		} catch(\Doctrine\DBAL\DBALException $exception) {
+		} catch(DBALException $exception) {
 			Helper::convertException($exception);
 		} catch (\PDOException $exception) {
 			Helper::convertException($exception);
@@ -129,7 +136,7 @@ abstract class Facade extends \Nette\Object
 			if ($flush == self::FLUSH) {
 				$this->entityManager->flush();
 			}
-		} catch(\Doctrine\DBAL\DBALException $exception) {
+		} catch(DBALException $exception) {
 			Helper::convertException($exception);
 		} catch (\PDOException $exception) {
 			Helper::convertException($exception);
@@ -157,7 +164,7 @@ abstract class Facade extends \Nette\Object
 
 	/**
 	 * @param string $alias
-	 * @return \Doctrine\ORM\QueryBuilder
+	 * @return QueryBuilder
 	 */
 	protected function createQueryBuilder($alias)
 	{
@@ -187,12 +194,12 @@ abstract class Facade extends \Nette\Object
 
 
 	/**
-	 * @param \Doctrine\ORM\QueryBuilder $qb
+	 * @param QueryBuilder $qb
 	 * @param string $name
 	 * @param array $mapping
 	 * @param array $filter
 	 */
-	protected function applyDatagridFilters(\Doctrine\ORM\QueryBuilder $qb, $name, array $mapping, $filter = NULL)
+	protected function applyDatagridFilters(QueryBuilder $qb, $name, array $mapping, $filter = NULL)
 	{
 		if ($filter) {
 			$number = 1;
@@ -217,12 +224,12 @@ abstract class Facade extends \Nette\Object
 
 
 	/**
-	 * @param \Doctrine\ORM\QueryBuilder $qb
+	 * @param QueryBuilder $qb
 	 * @param string $name
 	 * @param array $mapping
 	 * @param array $order
 	 */
-	protected function applyDatagridOrder(\Doctrine\ORM\QueryBuilder $qb, $name, array $mapping, $order = NULL)
+	protected function applyDatagridOrder(QueryBuilder $qb, $name, array $mapping, $order = NULL)
 	{
 		if ($order) {
 			if (isset($mapping[$order[0]])) {

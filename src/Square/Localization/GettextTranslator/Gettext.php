@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) 2010 Patrik Votoček <patrik@votocek.cz>
  *
  * Permission is hereby granted, free of charge, to any person
@@ -87,11 +87,14 @@ class Gettext extends Nette\Object implements IEditable
 	private $activeDictionary;
 
 
+
 	/**
 	 * Constructor
 	 *
+	 * @param \Nette\DI\Container $container
 	 * @param array $files
 	 * @param string $lang
+	 * @throws \Nette\InvalidStateException
 	 */
 	public function __construct(Nette\DI\Container $container, array $files = NULL, $lang = NULL)
 	{
@@ -136,10 +139,14 @@ class Gettext extends Nette\Object implements IEditable
 	}
 
 
+
 	/**
 	 * Adds a file to parse
-	 * @param string
-	 * @param string
+	 * @param $dir
+	 * @param $identifier
+	 * @throws \InvalidArgumentException
+	 * @internal param $string
+	 * @internal param $string
 	 * @return NetteTranslator\Gettext (supports fluent interface)
 	 */
 	public function addFile($dir, $identifier)
@@ -155,7 +162,7 @@ class Gettext extends Nette\Object implements IEditable
 			$this->files[$identifier] = $dir;
 		else
 			throw new \InvalidArgumentException("Directory '$dir' doesn't exist.");
-		
+
 		return $this;
 	}
 
@@ -194,10 +201,14 @@ class Gettext extends Nette\Object implements IEditable
 		}
 	}
 
+
+
 	/**
 	 * Parse dictionary file
 	 *
 	 * @param string $file file path
+	 * @param $identifier
+	 * @throws \InvalidArgumentException
 	 */
 	protected function parseFile($file, $identifier)
 	{
@@ -454,7 +465,7 @@ class Gettext extends Nette\Object implements IEditable
 		}
 		if (static::$cacheMode) {
 			$cache = $this->cache
-				->clean(array(\Nette\Caching\Cache::TAGS => 'dictionary-'.$this->lang));
+				->clean(array(Nette\Caching\Cache::TAGS => 'dictionary-'.$this->lang));
 		}
 	}
 

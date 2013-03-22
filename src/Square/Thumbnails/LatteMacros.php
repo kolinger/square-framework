@@ -10,8 +10,10 @@
 
 namespace Square\Thumbnails;
 
+use Nette\Latte\CompileException;
 use Nette\Latte\Compiler;
 use Nette\Latte\MacroNode;
+use Nette\Latte\Macros\MacroSet;
 use Nette\Latte\PhpWriter;
 use Nette\Latte\Engine;
 
@@ -20,12 +22,12 @@ use Nette\Latte\Engine;
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class LatteMacros extends \Nette\Latte\Macros\MacroSet
+class LatteMacros extends MacroSet
 {
 
 	/**
 	 * @param \Nette\Latte\Engine
-	 * @return \Nette\Latte\Macros\MacroSet
+	 * @return MacroSet
 	 */
 	public static function factory(Engine $engine)
 	{
@@ -36,7 +38,7 @@ class LatteMacros extends \Nette\Latte\Macros\MacroSet
 
 	/**
 	 * @param \Nette\Latte\Compiler $compiler
-	 * @return \Nette\Latte\Macros\MacroSet
+	 * @return MacroSet
 	 */
 	public static function install(Compiler $compiler)
 	{
@@ -51,18 +53,18 @@ class LatteMacros extends \Nette\Latte\Macros\MacroSet
 	 * @param \Nette\Latte\MacroNode $node
 	 * @param \Nette\Latte\PhpWriter $writer
 	 * @return string
-	 * @throws \Nette\Latte\CompileException
+	 * @throws CompileException
 	 */
 	public function macroThumbnail(MacroNode $node, PhpWriter $writer)
 	{
 		$data = explode(',', $node->args);
 
 		if (count($data) < 1) {
-			throw new \Nette\Latte\CompileException('Image file missing for thumbnail macro');
+			throw new CompileException('Image file missing for thumbnail macro');
 		}
 
 		if (count($data) < 2) {
-			throw new \Nette\Latte\CompileException('URL missing for thumbnal macro');
+			throw new CompileException('URL missing for thumbnal macro');
 		}
 
 		$file = $data[0];

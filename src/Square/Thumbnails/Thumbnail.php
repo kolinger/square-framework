@@ -11,13 +11,13 @@
 namespace Square\Thumbnails;
 
 use Nette\Image;
-
+use Nette\Object;
 
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Thumbnail extends \Nette\Object
+class Thumbnail extends Object
 {
 
 	const THUMBNAILS_DIR = 'thumbnails';

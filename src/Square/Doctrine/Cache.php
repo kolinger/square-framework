@@ -11,24 +11,26 @@
 namespace Square\Doctrine;
 
 
+use Doctrine\Common\Cache\CacheProvider;
+use Nette\Caching\IStorage;
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Cache extends \Doctrine\Common\Cache\CacheProvider
+class Cache extends CacheProvider
 {
 
 	/**
-	 * @var \Nette\Caching\IStorage
+	 * @var IStorage
 	 */
 	private $storage;
 
 
 
 	/**
-	 * @param \Nette\Caching\IStorage $storage
+	 * @param IStorage $storage
 	 */
-	public function __construct(\Nette\Caching\IStorage $storage)
+	public function __construct(IStorage $storage)
 	{
 		$this->storage = new \Nette\Caching\Cache($storage, 'Square.Doctrine');
 	}

@@ -10,6 +10,7 @@
 
 namespace Square\Application;
 
+use Nette\DI\Container;
 use Nette\Utils\Strings;
 
 
@@ -29,10 +30,10 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 
 	/**
 	 * @param string $baseDir
-	 * @param \Nette\DI\Container $container
+	 * @param Container $container
 	 * @param array $namespaces
 	 */
-	public function __construct($baseDir, \Nette\DI\Container $container, $namespaces = array())
+	public function __construct($baseDir, Container $container, $namespaces = array())
 	{
 		parent::__construct($baseDir, $container);
 

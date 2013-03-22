@@ -10,6 +10,14 @@
 
 namespace Square\Application\UI;
 
+use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\PresenterComponent;
+use Nette\Caching\Cache;
+use Nette\DI\Container;
+use Nette\DI\MissingServiceException;
+use Nette\InvalidStateException;
+use Nette\MemberAccessException;
+use Nette\Reflection\Method;
 use Nette\Reflection\Property;
 use Nette\Reflection\ClassType;
 
@@ -41,7 +49,7 @@ class Presenter extends \Nette\Application\UI\Presenter
 	private $autowire = array();
 
 	/**
-	 * @var \Nette\DI\Container
+	 * @var Container
 	 */
 	private $serviceLocator;
 
@@ -118,19 +126,19 @@ class Presenter extends \Nette\Application\UI\Presenter
 
 
 	/**
-	 * @param \Nette\DI\Container $dic
-	 * @throws \Nette\InvalidStateException
-	 * @throws \Nette\MemberAccessException
-	 * @throws \Nette\DI\MissingServiceException
+	 * @param Container $dic
+	 * @throws InvalidStateException
+	 * @throws MemberAccessException
+	 * @throws MissingServiceException
 	 */
-	public function injectProperties(\Nette\DI\Container $dic)
+	public function injectProperties(Container $dic)
 	{
-		if (!$this instanceof \Nette\Application\UI\PresenterComponent) {
-			throw new \Nette\MemberAccessException('Trait ' . __TRAIT__ . ' can be used only in descendants of PresenterComponent.');
+		if (!$this instanceof PresenterComponent) {
+			throw new MemberAccessException('Trait ' . __TRAIT__ . ' can be used only in descendants of PresenterComponent.');
 		}
 
 		$this->serviceLocator = $dic;
-		$cache = new \Nette\Caching\Cache($this->serviceLocator->getByType('Nette\Caching\IStorage'), self::CACHE_NAMESPACE);
+		$cache = new Cache($this->serviceLocator->getByType('Nette\Caching\IStorage'), self::CACHE_NAMESPACE);
 		if (($this->autowire = $cache->load($presenterClass = get_class($this))) === NULL) {
 			$this->autowire = array();
 
@@ -143,21 +151,21 @@ class Presenter extends \Nette\Application\UI\Presenter
 				}
 
 				if (!$type = ltrim($prop->getAnnotation('var'), '\\')) {
-					throw new \Nette\InvalidStateException("Missing annotation @var with typehint on $prop.");
+					throw new InvalidStateException("Missing annotation @var with typehint on $prop.");
 				}
 
 				if (!class_exists($type) && !interface_exists($type)) {
 					if (substr($prop->getAnnotation('var'), 0, 1) === '\\') {
-						throw new \Nette\InvalidStateException("Class \"$type\" was not found, please check the typehint on $prop");
+						throw new InvalidStateException("Class \"$type\" was not found, please check the typehint on $prop");
 					}
 
 					if (!class_exists($type = $prop->getDeclaringClass()->getNamespaceName() . '\\' . $type) && !interface_exists($type)) {
-						throw new \Nette\InvalidStateException("Neither class \"" . $prop->getAnnotation('var') . "\" or \"$type\" was found, please check the typehint on $prop");
+						throw new InvalidStateException("Neither class \"" . $prop->getAnnotation('var') . "\" or \"$type\" was found, please check the typehint on $prop");
 					}
 				}
 
 				if (empty($this->serviceLocator->classes[strtolower($type)])) {
-					throw new \Nette\DI\MissingServiceException("Service of type \"$type\" not found for $prop.");
+					throw new MissingServiceException("Service of type \"$type\" not found for $prop.");
 				}
 
 				// unset property to pass control to __set() and __get()
@@ -188,7 +196,7 @@ class Presenter extends \Nette\Application\UI\Presenter
 	/**
 	 * @param string $name
 	 * @param mixed $value
-	 * @throws \Nette\MemberAccessException
+	 * @throws MemberAccessException
 	 * @return mixed
 	 */
 	public function __set($name, $value)
@@ -197,10 +205,10 @@ class Presenter extends \Nette\Application\UI\Presenter
 			return parent::__set($name, $value);
 
 		} elseif ($this->autowire[$name]['value']) {
-			throw new \Nette\MemberAccessException("Property \$$name has already been set.");
+			throw new MemberAccessException("Property \$$name has already been set.");
 
 		} elseif (!$value instanceof $this->autowire[$name]['type']) {
-			throw new \Nette\MemberAccessException("Property \$$name must be an instance of " . $this->autowire[$name]['type'] . ".");
+			throw new MemberAccessException("Property \$$name must be an instance of " . $this->autowire[$name]['type'] . ".");
 		}
 
 		return $this->autowire[$name]['value'] = $value;
@@ -210,7 +218,7 @@ class Presenter extends \Nette\Application\UI\Presenter
 
 	/**
 	 * @param $name
-	 * @throws \Nette\MemberAccessException
+	 * @throws MemberAccessException
 	 * @return mixed
 	 */
 	public function &__get($name)
@@ -230,24 +238,24 @@ class Presenter extends \Nette\Application\UI\Presenter
 
 	/**
 	 * @param object $element
-	 * @throws \Nette\InvalidStateException
-	 * @throws \Nette\Application\ForbiddenRequestException
+	 * @throws InvalidStateException
+	 * @throws ForbiddenRequestException
 	 */
 	public function checkRequirements($element)
 	{
-		if ($element instanceof \Nette\Reflection\Method && $element->hasAnnotation('privilege')) {
+		if ($element instanceof Method && $element->hasAnnotation('privilege')) {
 			if ($element->hasAnnotation('resource')) {
 				$resource = $element->getAnnotation('resource');
 			} else {
 				$presenter = $element->getDeclaringClass();
 				if (!$presenter->hasAnnotation('resource')) {
-					throw new \Nette\InvalidStateException('@resource annotation must be declared');
+					throw new InvalidStateException('@resource annotation must be declared');
 				}
 				$resource = $presenter->getAnnotation('resource');
 			}
 
 			if (!$this->getUser()->isAllowed($resource, $element->getAnnotation('privilege'))) {
-				throw new \Nette\Application\ForbiddenRequestException(NULL, 403);
+				throw new ForbiddenRequestException(NULL, 403);
 			}
 		}
 

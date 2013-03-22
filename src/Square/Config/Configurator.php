@@ -11,6 +11,12 @@
 namespace Square\Config;
 
 
+use Square\Console\Extension as ConsoleExtension;
+use Square\Doctrine\Extension as DoctrineExtension;
+use Square\Forms\Controls\CheckboxList;
+use Square\Forms\Controls\DateTime;
+use Square\Forms\Controls\Editor;
+use Square\Forms\Controls\TagsInput;
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
@@ -23,10 +29,10 @@ class Configurator extends \Nette\Config\Configurator
 	 */
 	public function createContainer()
 	{
-		\Square\Forms\Controls\CheckboxList::register();
-		\Square\Forms\Controls\DateTime::register();
-		\Square\Forms\Controls\TagsInput::register();
-		\Square\Forms\Controls\Editor::register();
+		CheckboxList::register();
+		DateTime::register();
+		TagsInput::register();
+		Editor::register();
 		return parent::createContainer();
 	}
 
@@ -40,8 +46,8 @@ class Configurator extends \Nette\Config\Configurator
 		$compiler = parent::createCompiler();
 
 		$compiler->addExtension(SquareExtension::NAME, new SquareExtension);
-		$compiler->addExtension(\Square\Doctrine\Extension::NAME, new \Square\Doctrine\Extension);
-		$compiler->addExtension(\Square\Console\Extension::NAME, new \Square\Console\Extension);
+		$compiler->addExtension(ConsoleExtension::NAME, new ConsoleExtension);
+		$compiler->addExtension(DoctrineExtension::NAME, new DoctrineExtension);
 
 		return $compiler;
 	}

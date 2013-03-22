@@ -11,7 +11,8 @@
 namespace Square\Model;
 
 use Doctrine\ORM\Mapping as orm;
-
+use Nette\Object;
+use Nette\Utils\Strings;
 
 
 /**
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping as orm;
  *
  * @property-read int $id
  */
-abstract class Entity extends \Nette\Object
+abstract class Entity extends Object
 {
 
 	/**
@@ -51,7 +52,7 @@ abstract class Entity extends \Nette\Object
 	 */
 	protected static function normalizeString($string)
 	{
-		$string = \Nette\Utils\Strings::trim($string);
+		$string = Strings::trim($string);
 		if ($string === '') {
 			return NULL;
 		}
