@@ -36,9 +36,9 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 	public function __construct($baseDir, Container $container, $namespaces = array())
 	{
 		parent::__construct($baseDir, $container);
-
 		asort($namespaces);
 		$this->namespaces = $namespaces;
+		$this->mapping['*'] = '\*\*Presenter';
 	}
 
 
@@ -49,10 +49,7 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 	 */
 	public function formatPresenterClass($presenter)
 	{
-		if ($presenter == 'Nette:Micro') {
-			$presenter = 'NetteModule:Micro';
-		}
-		$class = str_replace(':', '\\', $presenter) . 'Presenter';
+		$class = parent::formatPresenterClass($presenter);
 		if (!class_exists($class)) {
 			foreach ($this->namespaces as $namespace => $priority) {
 				if (Strings::endsWith($namespace, '\\')) {
@@ -81,7 +78,7 @@ class PresenterFactory extends \Nette\Application\PresenterFactory
 				break;
 			}
 		}
-		return str_replace('\\', ':', substr($class, 0, -9));
+		return parent::unformatPresenterClass($class);
 	}
 
 }
