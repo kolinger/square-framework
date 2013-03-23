@@ -10,22 +10,21 @@
 
 namespace Square\Doctrine;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\SQLLogger;
 use Nette\Database\Diagnostics\ConnectionPanel;
-use Nette\Diagnostics\Debugger,
-	Nette\Utils\Strings,
-	Doctrine\DBAL\Connection,
-	Nette\Database\Helpers;
+use Nette\Database\Helpers;
+use Nette\Diagnostics\Debugger;
 use Nette\Diagnostics\IBarPanel;
 use Nette\InvalidStateException;
 use Nette\Object;
+use Nette\Utils\Strings;
 
 /**
- * Debug panel for Doctrine
- *
- * @author	David Grudl
- * @author	Patrik Votoček
- * @author	Michael Moravec
+ * @author David Grudl
+ * @author Patrik Votoček
+ * @author Michael Moravec
+ * @author Tomáš Kolinger
  */
 class Logger extends Object implements IBarPanel, SQLLogger
 {
@@ -35,19 +34,35 @@ class Logger extends Object implements IBarPanel, SQLLogger
 		TIME = 3,
 		EXPLAIN = 4;
 
-	/** @var bool whether to do explain queries for selects or not */
+	/**
+	 * @var bool
+	 */
 	public $doExplains = TRUE;
-	/** @var bool */
-	private $explainRunning = FALSE;
-	/** @var \Doctrine\DBAL\Connection|NULL */
-	private $connection;
-	/** @var int logged time */
-	public $totalTime = 0;
-	/** @var array */
-	public $queries = array();
 
 	/**
-	 * @param \Doctrine\DBAL\Connection
+	 * @var bool
+	 */
+	private $explainRunning = FALSE;
+
+	/**
+	 * @var Connection
+	 */
+	private $connection;
+
+	/**
+	 * @var int
+	 */
+	public $totalTime = 0;
+
+	/**
+	 * @var array
+	 */
+	public $queries = array();
+
+
+
+	/**
+	 * @param Connection $connection
 	 * @return ConnectionPanel
 	 */
 	public function setConnection(Connection $connection)
@@ -55,6 +70,8 @@ class Logger extends Object implements IBarPanel, SQLLogger
 		$this->connection = $connection;
 		return $this;
 	}
+
+
 
 	/**
 	 * @param string
@@ -77,6 +94,9 @@ class Logger extends Object implements IBarPanel, SQLLogger
 			self::EXPLAIN => NULL,
 		);
 	}
+
+
+
 
 	public function stopQuery()
 	{
@@ -115,6 +135,8 @@ class Logger extends Object implements IBarPanel, SQLLogger
 		}
 	}
 
+
+
 	public function getTab()
 	{
 		return '<span title="Doctrine 2">'
@@ -123,6 +145,7 @@ class Logger extends Object implements IBarPanel, SQLLogger
 			. ($this->totalTime ? ' / ' . sprintf('%0.1f', $this->totalTime * 1000) . 'ms' : '')
 			. '</span>';
 	}
+
 
 	/**
 	 * @param array
@@ -133,8 +156,8 @@ class Logger extends Object implements IBarPanel, SQLLogger
 		$s = '<tr>';
 		$s .= '<td>' . sprintf('%0.3f', $query[self::TIME] * 1000);
 
+		static $counter;
 		if ($this->doExplains && isset($query[self::EXPLAIN])) {
-			static $counter;
 			$counter++;
 			$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-Doctrine2Panel-row-$counter'>explain&nbsp;&#x25ba;</a>";
 		}
@@ -142,7 +165,7 @@ class Logger extends Object implements IBarPanel, SQLLogger
 		$s .= '</td>';
 		$s .= '<td class="nette-Doctrine2Panel-sql" style="min-width: 400px">' . Helpers::dumpSql($query[self::SQL]);
 		if ($this->doExplains && isset($query[self::EXPLAIN])) {
-			$s .= "<table id='nette-Doctrine2Panel-row-$counter' class='nette-collapsed'><tr>";
+			$s .= "<table id='nette-Doctrine2Panel-row-" . $counter . "' class='nette-collapsed'><tr>";
 			foreach ($query[self::EXPLAIN][0] as $col => $foo) {
 				$s .= '<th>' . htmlSpecialChars($col) . '</th>';
 			}
@@ -163,12 +186,16 @@ class Logger extends Object implements IBarPanel, SQLLogger
 		return $s;
 	}
 
+
+
 	protected function renderStyles()
 	{
 		return '<style> #nette-debug td.nette-Doctrine2Panel-sql { background: white !important }
 			#nette-debug .nette-Doctrine2Panel-source { color: #BBB !important }
 			#nette-debug nette-Doctrine2Panel tr table { margin: 8px 0; max-height: 150px; overflow:auto } </style>';
 	}
+
+
 
 	/**
 	 * @param \PDOException
@@ -190,6 +217,8 @@ class Logger extends Object implements IBarPanel, SQLLogger
 		return array();
 	}
 
+
+
 	public function getPanel()
 	{
 		$s = '';
@@ -206,4 +235,5 @@ class Logger extends Object implements IBarPanel, SQLLogger
 			</table>
 			</div>';
 	}
+
 }
