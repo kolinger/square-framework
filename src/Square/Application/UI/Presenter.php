@@ -35,13 +35,7 @@ class Presenter extends \Nette\Application\UI\Presenter
 	 * @var string
 	 * @persistent
 	 */
-	public $lang;
-
-	/**
-	 * @var \Square\Localization\GettextTranslator\Gettext
-	 * @autowire
-	 */
-	protected $translator;
+	public $language;
 
 	/**
 	 * @var array
@@ -62,20 +56,6 @@ class Presenter extends \Nette\Application\UI\Presenter
 	 * @var string
 	 */
 	private $title;
-
-
-
-	protected function startup()
-	{
-		parent::startup();
-
-		// translator
-		if (!isset($this->lang)) {
-			$this->lang = $this->getContext()->parameters["lang"];
-		}
-		$this->translator->setLang($this->lang);
-		$this->getTemplate()->setTranslator($this->translator);
-	}
 
 
 
