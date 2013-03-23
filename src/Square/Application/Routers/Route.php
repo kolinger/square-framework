@@ -13,7 +13,6 @@ namespace Square\Application\Routers;
 use Nette\Application\Routers\Route as NetteRoute;
 
 
-
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */

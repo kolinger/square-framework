@@ -11,7 +11,6 @@
 namespace Square\Model;
 
 
-
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */

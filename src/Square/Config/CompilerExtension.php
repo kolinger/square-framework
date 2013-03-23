@@ -10,12 +10,13 @@
 
 namespace Square\Config;
 
+use Nette\Config\CompilerExtension as NetteCompilerExtension;
 
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-abstract class CompilerExtension extends \Nette\Config\CompilerExtension
+abstract class CompilerExtension extends NetteCompilerExtension
 {
 
 	/**

@@ -10,13 +10,13 @@
 
 namespace Square\Config;
 
-
 use Square\Console\Extension as ConsoleExtension;
 use Square\Doctrine\Extension as DoctrineExtension;
 use Square\Forms\Controls\CheckboxList;
 use Square\Forms\Controls\DateTime;
 use Square\Forms\Controls\Editor;
 use Square\Forms\Controls\TagsInput;
+
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>

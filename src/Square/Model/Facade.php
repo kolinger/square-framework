@@ -10,7 +10,6 @@
 
 namespace Square\Model;
 
-
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -18,6 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\Object;
+
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>

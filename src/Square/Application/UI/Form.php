@@ -10,12 +10,13 @@
 
 namespace Square\Application\UI;
 
+use Nette\Application\UI\Form as NetteForm;
 
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Form extends \Nette\Application\UI\Form
+class Form extends NetteForm
 {
 
 	public function __construct()

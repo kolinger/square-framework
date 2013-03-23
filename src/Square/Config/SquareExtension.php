@@ -11,7 +11,6 @@
 namespace Square\Config;
 
 
-
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */

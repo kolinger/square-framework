@@ -22,7 +22,6 @@ use Nette\Reflection\ClassType;
 use Nette\Reflection\Method;
 use Nette\Reflection\Property;
 use Nette\Templating\ITemplate;
-use Square\Templating\FileTemplate;
 
 
 /**

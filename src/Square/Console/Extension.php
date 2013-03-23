@@ -10,11 +10,11 @@
 
 namespace Square\Console;
 
-
 use Nette\DI\Container;
 use Square\Config\CompilerExtension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
+
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>

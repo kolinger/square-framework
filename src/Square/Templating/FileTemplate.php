@@ -13,7 +13,6 @@ namespace Square\Templating;
 use Nette\Templating\FileTemplate as NetteFileTemplate;
 
 
-
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */

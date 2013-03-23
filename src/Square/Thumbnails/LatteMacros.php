@@ -12,11 +12,10 @@ namespace Square\Thumbnails;
 
 use Nette\Latte\CompileException;
 use Nette\Latte\Compiler;
+use Nette\Latte\Engine;
 use Nette\Latte\MacroNode;
 use Nette\Latte\Macros\MacroSet;
 use Nette\Latte\PhpWriter;
-use Nette\Latte\Engine;
-
 
 
 /**

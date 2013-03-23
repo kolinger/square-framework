@@ -10,13 +10,13 @@
 
 namespace Square\Console;
 
-
 use Nette\Application\IRouter;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
 use Nette\Object;
 use Symfony\Component\Console\Application;
+
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>

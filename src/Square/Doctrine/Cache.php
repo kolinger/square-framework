@@ -10,9 +10,10 @@
 
 namespace Square\Doctrine;
 
-
 use Doctrine\Common\Cache\CacheProvider;
+use Nette\Caching\Cache as NetteCache;
 use Nette\Caching\IStorage;
+
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
@@ -32,7 +33,7 @@ class Cache extends CacheProvider
 	 */
 	public function __construct(IStorage $storage)
 	{
-		$this->storage = new \Nette\Caching\Cache($storage, 'Square.Doctrine');
+		$this->storage = new NetteCache($storage, 'Square.Doctrine');
 	}
 
 
@@ -75,11 +76,11 @@ class Cache extends CacheProvider
 	protected function doSave($id, $data, $lifeTime = FALSE)
 	{
 		$dependencies = array(
-			\Nette\Caching\Cache::TAGS => array('doctrine'),
+			NetteCache::TAGS => array('doctrine'),
 		);
 
 		if ($lifeTime) {
-			$dependencies[\Nette\Caching\Cache::EXPIRE] = time() + $lifeTime;
+			$dependencies[NetteCache::EXPIRE] = time() + $lifeTime;
 		}
 
 		$this->storage->save($id, $data, $dependencies);
@@ -106,7 +107,7 @@ class Cache extends CacheProvider
 	protected function doFlush()
 	{
 		$this->storage->clean(array(
-			\Nette\Caching\Cache::ALL => TRUE
+			NetteCache::ALL => TRUE
 		));
 		return TRUE;
 	}

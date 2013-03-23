@@ -10,7 +10,6 @@
 
 namespace Square\Doctrine;
 
-
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
@@ -22,6 +21,7 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Nette\Diagnostics\Debugger;
 use Nette\Reflection\ClassType;
 use Square\Config\CompilerExtension;
+
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>

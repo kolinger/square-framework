@@ -10,11 +10,11 @@
 
 namespace Square\Model;
 
-
 use Doctrine\DBAL\DBALException;
 use Nette\InvalidArgumentException;
 use Nette\Object;
 use Nette\StaticClassException;
+
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>

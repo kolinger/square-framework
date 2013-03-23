@@ -10,15 +10,15 @@
 
 namespace Square\Application;
 
+use Nette\Application\PresenterFactory as NettePresenterFactory;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
-
 
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class PresenterFactory extends \Nette\Application\PresenterFactory
+class PresenterFactory extends NettePresenterFactory
 {
 
 	/**
