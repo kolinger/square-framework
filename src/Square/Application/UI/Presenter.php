@@ -11,22 +11,24 @@
 namespace Square\Application\UI;
 
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Presenter as NettePresenter;
 use Nette\Application\UI\PresenterComponent;
 use Nette\Caching\Cache;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
 use Nette\MemberAccessException;
+use Nette\Reflection\ClassType;
 use Nette\Reflection\Method;
 use Nette\Reflection\Property;
-use Nette\Reflection\ClassType;
-
+use Nette\Templating\ITemplate;
+use Square\Templating\FileTemplate;
 
 
 /**
  * @author Tomáš Kolinger <tomas@kolinger.name>
  */
-class Presenter extends \Nette\Application\UI\Presenter
+class Presenter extends NettePresenter
 {
 
 	const CACHE_NAMESPACE = 'Square.Presenter.Autowire';
@@ -75,11 +77,12 @@ class Presenter extends \Nette\Application\UI\Presenter
 	 */
 	public function setTitle($title, $args = array())
 	{
-		if (count($args)) {
-			$this->title = $this->translator->translate($title, NULL, $args);
-		} else {
-			$this->title = $this->translator->translate($title);
-		}
+		$this->title = $title;
+//		if (count($args)) {
+//			$this->title = $this->translator->translate($title, NULL, $args);
+//		} else {
+//			$this->title = $this->translator->translate($title);
+//		}
 	}
 
 
@@ -139,7 +142,17 @@ class Presenter extends \Nette\Application\UI\Presenter
 						throw new InvalidStateException("Class \"$type\" was not found, please check the typehint on $prop");
 					}
 
-					if (!class_exists($type = $prop->getDeclaringClass()->getNamespaceName() . '\\' . $type) && !interface_exists($type)) {
+					if (class_exists('Doctrine\Common\Annotations\TokenParser')) {
+						$contents = file_get_contents($prop->getDeclaringClass()->getFileName());
+						$tokenParser = new \Doctrine\Common\Annotations\TokenParser($contents);
+						$imports = $tokenParser->parseUseStatements($prop->getDeclaringClass()->getName());
+						$key = strtolower($type);
+						if (isset($imports[$key])) {
+							$type = $imports[$key];
+						}
+					}
+
+					if (!class_exists($type) && !class_exists($type = $prop->getDeclaringClass()->getNamespaceName() . '\\' . $type) && !interface_exists($type)) {
 						throw new InvalidStateException("Neither class \"" . $prop->getAnnotation('var') . "\" or \"$type\" was found, please check the typehint on $prop");
 					}
 				}
@@ -212,6 +225,20 @@ class Presenter extends \Nette\Application\UI\Presenter
 		}
 
 		return $this->autowire[$name]['value'];
+	}
+
+
+
+	/**
+	 * @param string $class
+	 * @return ITemplate
+	 */
+	protected function createTemplate($class = NULL)
+	{
+		if ($class === NULL) {
+			$class = 'Square\Templating\FileTemplate';
+		}
+		return parent::createTemplate($class);
 	}
 
 
