@@ -13,9 +13,7 @@ namespace Square\Doctrine;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\EventManager;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Event\Listeners\MysqlSessionInit;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Nette\Diagnostics\Debugger;
@@ -51,7 +49,6 @@ class Extension extends CompilerExtension
 		'user' => 'root',
 		'password' => '',
 		'charset' => 'utf8',
-		'collation' => 'utf8_czech_ci',
 		'dbname' => '',
 	);
 
@@ -131,15 +128,9 @@ class Extension extends CompilerExtension
 	 */
 	public static function createConnection(array $config, Logger $logger, Configuration $configuration)
 	{
-		$eventManager = new EventManager;
-		$eventManager->addEventSubscriber(
-			new MysqlSessionInit($config['charset'], $config['collation'])
-		);
-
 		$connection = DriverManager::getConnection(
 			$config,
-			$configuration,
-			$eventManager
+			$configuration
 		);
 
 		if (Debugger::$bar) {
