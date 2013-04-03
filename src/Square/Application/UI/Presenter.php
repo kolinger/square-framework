@@ -17,6 +17,7 @@ use Nette\Caching\Cache;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
+use Nette\Localization\ITranslator;
 use Nette\MemberAccessException;
 use Nette\Reflection\ClassType;
 use Nette\Reflection\Method;
@@ -37,6 +38,12 @@ class Presenter extends NettePresenter
 	 * @persistent
 	 */
 	public $language;
+
+	/**
+	 * @var ITranslator
+	 * @autowire
+	 */
+	protected $translator;
 
 	/**
 	 * @var array
@@ -77,11 +84,16 @@ class Presenter extends NettePresenter
 	public function setTitle($title, $args = array())
 	{
 		$this->title = $title;
-//		if (count($args)) {
-//			$this->title = $this->translator->translate($title, NULL, $args);
-//		} else {
-//			$this->title = $this->translator->translate($title);
-//		}
+	}
+
+
+
+	/**
+	 * @return ITranslator
+	 */
+	public function getTranslator()
+	{
+		return $this->translator;
 	}
 
 
@@ -151,7 +163,7 @@ class Presenter extends NettePresenter
 						}
 					}
 
-					if (!class_exists($type) && !class_exists($type = $prop->getDeclaringClass()->getNamespaceName() . '\\' . $type) && !interface_exists($type)) {
+					if (!class_exists($type) && !interface_exists($type) && !class_exists($type = $prop->getDeclaringClass()->getNamespaceName() . '\\' . $type)) {
 						throw new InvalidStateException("Neither class \"" . $prop->getAnnotation('var') . "\" or \"$type\" was found, please check the typehint on $prop");
 					}
 				}
@@ -232,12 +244,11 @@ class Presenter extends NettePresenter
 	 * @param string $class
 	 * @return ITemplate
 	 */
-	protected function createTemplate($class = NULL)
+	protected function createTemplate($class = 'Square\Templating\FileTemplate')
 	{
-		if ($class === NULL) {
-			$class = 'Square\Templating\FileTemplate';
-		}
-		return parent::createTemplate($class);
+		$template =  parent::createTemplate($class);
+		$template->setTranslator($this->getTranslator());
+		return $template;
 	}
 
 
