@@ -27,7 +27,7 @@ class Control extends NetteControl
 	public function createTemplate($class = 'Square\Templating\FileTemplate')
 	{
 		$template =  parent::createTemplate($class);
-		$template->setTranslator(callback($this->getPresenter()->getTranslator(), 'translate'));
+		$template->setTranslator($this->getPresenter()->getTranslator());
 		return $template;
 	}
 
